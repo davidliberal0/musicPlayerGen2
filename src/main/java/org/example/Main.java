@@ -2,24 +2,45 @@ package org.example;
 
 import javax.sound.sampled.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     static void main() {
         String filePath = "On the Flip.wav";
         File file = new File(filePath);
 
-        try (AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)) {
+
+        try (Scanner scanner = new Scanner(System.in);
+             AudioInputStream audioStream = AudioSystem.getAudioInputStream(file)) {
+
             Clip clip = AudioSystem.getClip();
             clip.open(audioStream);
+
+            clip.start();
+
+            String response = "";
+
+            while (!response.equals("Q")) {
+                System.out.println("P = Play");
+                System.out.println("S = Stop");
+                System.out.println("R = Reset");
+                System.out.println("Q = Quit");
+                System.out.print("Enter your choice: ");
+                response = scanner.next().toUpperCase();
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Could not locate file");
         } catch (UnsupportedAudioFileException e) {
             System.out.println("Audio file is not supported");
         } catch (LineUnavailableException e) {
             System.out.println("Unable to access audio resource");
         } catch (IOException e) {
             System.out.println("Something went wrong");
+        } finally {
+            System.out.println("bye");
         }
     }
 }
